@@ -12,6 +12,10 @@ pandas = "*"
 sklearn = "*"
 lightgbm = "*"
 jupyterlab = "*"
+matplotlib = "*"
+tqdm = "*"
+ipywidgets = "*"
+joblib = "*"
 
 [requires]
 python_version = "3.7"

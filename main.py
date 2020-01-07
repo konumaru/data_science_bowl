@@ -1,75 +1,64 @@
-import os
-import sys
-sys.path.append('..')
-
-import warnings
-warnings.filterwarnings('ignore')
-
-import yaml
-import datetime
-
 import numpy as np
 import pandas as pd
 
-from model import Model, GroupKfoldModel, rmsle
-from utils import get_latest_version_num, load_config, dump_config,\
-    load_dataset, export_submission_file
-from sklearn.model_selection import KFold, StratifiedKFold, TimeSeriesSplit
-from sklearn.model_selection import train_test_split
 
-LOCAL_TEST = False
-# Experiment Major Version
-VERSION = 1000
+def load_data(data_dir_path='./data/raw/', filetype='csv'):
+    print('Reading train file....')
+    train = pd.read_csv(data_dir_path + 'train.csv')
+    print('Training.csv file have {} rows and {} columns'.format(train.shape[0], train.shape[1]))
 
-seed = 42
-now = datetime.datetime.now()
+    print('Reading test file....')
+    test = pd.read_csv(data_dir_path + 'test.csv')
+    print('Test.csv file have {} rows and {} columns'.format(test.shape[0], test.shape[1]))
+
+    print('Reading specs file....')
+    specs = pd.read_csv(data_dir_path + 'specs.csv')
+    print('Specs.csv file have {} rows and {} columns'.format(specs.shape[0], specs.shape[1]))
+
+    return train, test, specs
+
+
+''' MEMO
+- train, test のデータの期間
+   - The date range in train is: 2019-07-23 to 2019-10-22
+   - The date range in test is: 2019-07-24 to 2019-10-14
+'''
+
+
+def transform(train, test, specs):
+    print('Assessment が含まれていないinstallation_idを除外')
+    # test データには、installation_id ごとに Assessment が少なくとも１回は行われている。
+    # train, test 間で共通するinstallation_idは存在しない。
+    # unique number of train is 4,242. and test is 1,000.
+    keep_ids = train.loc[train['type'] == 'Assessment', 'installation_id'].unique()
+    train = train[train.installation_id.isin(keep_ids)].reset_index(drop=True)
+
+    print('Bird Measurer (Assessment) の event_code == 4100 のデータを除外')
+    # 正しいのは、event_code == 4110 のデータのみであるため。
+    # MEMO: 4100のデータを除外するか、4100を別名にし、4110を4100に置換するか、検討する必要がある。
+    return None
+
+
+def predict():
+    return None
+
+
+def export():
+    return None
 
 
 def main():
-    # Set Experiment Version
-    sub_version = get_latest_version_num(VERSION)
-    # Laod Config
-    config = load_config()
-    # Laod Data
-    X_train_all, y_train_all, X_test = load_dataset(config['dataset'])
+    print('Load Data...')
+    train, test, specs = load_data()
 
-    if LOCAL_TEST:
-        config['params']['bagging_fraction'] = 0.01
+    print('Transform Data ...')
+    train, test = transform()
 
-    # Define And Train Model
-    model = Model(model_type=config['model_ref'])
-    y_preds, scores, models = model.train_and_predict(
-        config['params'], config['train_params'],
-        X_train_all, y_train_all, X_test,
-        n_fold=3, is_shuffle=True, seed=seed
-    )
+    print('Train Model...')
 
-    model.save_feature_importance(filepath=f'v{VERSION}/{sub_version}')
-    cv_score = np.mean(scores)
+    print('Prediction ...')
 
-    # Prediction And Eport Submission file
-    sub_df = pd.DataFrame()
-    sub_df[config['ID_name']] = pd.read_pickle('./data/input/test.pkl')[config['ID_name']]
-    sub_df[config['target_name']] = np.clip(np.mean(y_preds, axis=0), 0.0, None)
-
-    print(f'\nExport Submission file ...')
-    sub_dir = f'./data/submit/v{VERSION}'
-    sub_filename = f'sub_{now:%Y%m%d%H%M}_{sub_version}_{model.model_type}_{cv_score:02f}.csv'
-    export_submission_file(sub_df, os.path.join(sub_dir, sub_filename))
-
-    # Dump config
-    filepath = f'./config/version/v{VERSION}/{sub_version}_{model.model_type}_{cv_score:02f}.yml'
-    dump_config(config, filepath)
-
-    # Print Submit Message
-
-    print(
-        f'''
-        kaggle competitions submit -c ashrae-energy-prediction \
-            -f {os.path.join(sub_dir, sub_filename)} \
-            -m "{config['note']}"
-        '''
-    )
+    print('Export Submission File ...')
 
 
 if __name__ == '__main__':
