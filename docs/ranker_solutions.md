@@ -17,7 +17,6 @@
 
 
 # 参考カーネル
-
 ## アライさんのnotebook
 
 kernel: https://www.kaggle.com/hidehisaarai1213/dsb2019-nn-ovr-reduce-90-val-60-percentile#Functions-and-Classes
@@ -47,7 +46,7 @@ def lgb_regression_qwk(y_pred: np.ndarray, data: lgb.Dataset) -> Tuple[str, floa
 ```
 
 
-
+-----------------------------------------------------------------------
 
 
 
@@ -60,11 +59,13 @@ def lgb_regression_qwk(y_pred: np.ndarray, data: lgb.Dataset) -> Tuple[str, floa
   - ラベルデータをシャッフルしたときのfeature importance。
   - shuffle後のfeature importanceと同じくらい、あるいは低いのであればランダム値よりも重要ではない可能性が高い。
 
+
 ## 略語・変数名の処理について
 - コンペごとの略語変数名は、処理部分の頭にリストにしてくと良さそう。
   - ex) sess -> game_session, session
 
-## adversarial validation
+
+## adversarial validationの方法
 - あるinstallation_idにつき、１つのAssessmentのデータをランダムサンプリングする。
 - それを5-foldで学習する。
   - 1st のAUCは、0.49 ~ 0.51 に落ち着いた。
