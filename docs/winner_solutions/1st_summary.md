@@ -91,9 +91,12 @@
 
 
 ## What I can do 
-- [ ] GroupK CVを使う
-- [ ] validation metric にだけ重みをつける。
-  - [ ] weight = 1 / num of asessments
+- [x] GroupK CVを使う
+- [x] validation metric にだけ重みをつける。
+  - weight = 1 / num of asessments
+  - `lgbm.Dataset().get_weight()`が使えるので、metric関数の中でweightを呼び出せる。
+  - これで、validationにだけ weighted rmse が使える？
+    - https://github.com/Microsoft/LightGBM/blob/master/examples/python-guide/advanced_example.py#L184
 - [ ] drop duplicate cols の実装
 - [ ] adversarial validation の実装
 - [ ] null importance の実装

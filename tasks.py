@@ -28,7 +28,8 @@ def CreateNewExperiment(c):
 
     try:
         os.mkdir(new_exp_path)
-        os.mkdir(os.path.join(new_exp_path, 'notebook'))
+        os.mkdir(os.path.join(new_exp_path, 'version_ref.md'))
+        # os.mkdir(os.path.join(new_exp_path, 'notebook'))
         invoke.run(f'echo "Create {new_exp_path} Experiment Directory"')
     except FileExistsError as err:
         invoke.run(f'echo "{err}"')
