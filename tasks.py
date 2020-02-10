@@ -76,6 +76,9 @@ def ReduceDataSize(c):
 
     for src_file in SRC_FILES:
         print(f'Processing {src_file}')
+        # Load and Transform
         raw_df = pd.read_csv('./data/raw/' + src_file)
         reduced_df = reduce_mem_usage(raw_df)
-        reduced_df.to_csv('./data/reduced/' + src_file, index=False)
+        # Export
+        filename = src_file.split('.')[0]
+        reduced_df.to_pickle('./data/reduced/' + filename + '.pkl')

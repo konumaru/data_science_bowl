@@ -62,7 +62,7 @@
     - clipの長さ / 実際のclipの長さ
 - Event data Feature
   - event_dataにおける全ての連続値の mean, sum, last
-    - 　例 ）event_code2030_misses_mean
+    - 例 ）event_code2030_misses_mean
 
 
 ## Feature Selection
@@ -91,12 +91,12 @@
 
 
 ## What I can do 
-- [x] GroupK CVを使う
-- [x] validation metric にだけ重みをつける。
-  - weight = 1 / num of asessments
-  - `lgbm.Dataset().get_weight()`が使えるので、metric関数の中でweightを呼び出せる。
-  - これで、validationにだけ weighted rmse が使える？
-    - https://github.com/Microsoft/LightGBM/blob/master/examples/python-guide/advanced_example.py#L184
-- [ ] drop duplicate cols の実装
-- [ ] adversarial validation の実装
-- [ ] null importance の実装
+- Validation Strategy
+  - [x] GroupK CVを使う
+- Feature Selection
+  - [ ] drop duplicate cols の実装
+  - [ ] null importance の実装
+  - [ ] adversarial validation の実装
+- Model
+  - [x] validation だけ weighted RMSE を使う。
+    - 学習データは前過去、テストデータはtruncated後、という構図を再現するため。
