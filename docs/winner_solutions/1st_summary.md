@@ -53,7 +53,7 @@
   - 最後のAssessmentから現在のAsessmentまでのデータ
   - 全部で、５種類のデータセットを作りjoinした
 - Event interval feature (next event timestamps - current event timestamps)
-  - [mean, last] groupby [event_id, event_code]
+  - `df.groupby(by=[event_id, event_code]).agg([mean, last])`
   - いくつかの特徴量は効いた。
   - timestampでdiffをとって、event_codeでpivotしたらできそう。
 - Video skip prop ratio 
@@ -63,6 +63,7 @@
 - Event data Feature
   - event_dataにおける全ての連続値の mean, sum, last
     - 例 ）event_code2030_misses_mean
+      - `f'event_code{event_code}_{key}_{STATS}'` でJSONを展開すれば良さそう。
 
 
 ## Feature Selection
@@ -91,8 +92,20 @@
 
 
 ## What I can do 
+- Feature Enginnering
+  - Lots of stats
+    - type ごとのevent_code count 系の特徴量は作った。
+    - [x] titleごとの event_code count 統計量
+  - [ ] Video skip prop ratio
+    - 前回のセッションの最後のtimestampをとっておいて、現在のtimestampと引き算をする。
+    - その長さをclipを見た時間とし、実際のclipの長さで割る。
+    - 実際のclipの長さは、秒で格納されている。
+  - Event interval feature
+    - [x] event_idごとのインターバル時間を保持。リストを更新。calc_dict_statsで変換。
 - Validation Strategy
   - [x] GroupK CVを使う
+  - [ ] Nested CVの実装
+    - https://twitter.com/Maxwell_110/status/1227586019865722881
 - Feature Selection
   - [ ] drop duplicate cols の実装
   - [ ] null importance の実装

@@ -27,7 +27,6 @@ category-encoders = "*"
 typing = "*"
 networkx = "*"
 numba = "*"
-tensorflow = "*"
 gensim = "*"
 pyarrow = "*"
 
