@@ -8,6 +8,9 @@
 - バリデーションスコア
     - Weighted QWK：0.591
     - Weighted RMSE：1.009
+The model score :
+private qwk 0.568, public qwk 0.563
+cv weighted qwk 0.591, cv weighted rmse 1.009
 
 ### Validation
 
@@ -42,16 +45,15 @@
 - 20,000くらい特徴量を作った。
 - null importance で上位500に削った。
   - [null importance](https://www.kaggle.com/ogrellier/feature-selection-with-null-importances)
-
 - Lots of stats
   - mean, sum, last, std, max, slope
   - correct true ratio, correct feedback ratio
   - 似ているゲーム間のacuuracyにはちゃんと相関があった。
 - データセットから異なる特徴量を作った
-  - 全過去のデータ
-  - 直前の5, 12, 48時間のデータ
-  - 最後のAssessmentから現在のAsessmentまでのデータ
   - 全部で、５種類のデータセットを作りjoinした
+    - 全過去のデータ
+    - 直前の5, 12, 48時間のデータ
+    - 最後のAssessmentから現在のAsessmentまでのデータ
 - Event interval feature (next event timestamps - current event timestamps)
   - `df.groupby(by=[event_id, event_code]).agg([mean, last])`
   - いくつかの特徴量は効いた。
@@ -102,6 +104,8 @@
     - 実際のclipの長さは、秒で格納されている。
   - Event interval feature
     - [x] event_idごとのインターバル時間を保持。リストを更新。calc_dict_statsで変換。
+  - Event data Feature
+    - [ ] つくる
 - Validation Strategy
   - [x] GroupK CVを使う
   - [ ] Nested CVの実装

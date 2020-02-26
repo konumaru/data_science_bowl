@@ -27,9 +27,12 @@ def CreateNewExperiment(c):
     new_exp_path = 'v' + next_version.zfill(2) + '000'
 
     try:
+        # folderの作成
         os.mkdir(new_exp_path)
-        os.mkdir(os.path.join(new_exp_path, 'version_ref.md'))
-        # os.mkdir(os.path.join(new_exp_path, 'notebook'))
+        # version_ref.mdの作成
+        with open(os.path.join(new_exp_path, 'version_ref.md'), 'w') as f:
+            f.write('# Version Reference')
+
         invoke.run(f'echo "Create {new_exp_path} Experiment Directory"')
     except FileExistsError as err:
         invoke.run(f'echo "{err}"')
